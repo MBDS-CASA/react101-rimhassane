@@ -1,7 +1,7 @@
 function Footer() {
   const annee = new Date().getFullYear();
-  const prenom = "TonPrenom";
-  const nom = "TonNom";
+  const prenom = "Rim";
+  const nom = "Hassane";
 
   return (
     <footer className="footer">
