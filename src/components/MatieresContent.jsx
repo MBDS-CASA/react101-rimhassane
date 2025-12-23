@@ -11,7 +11,13 @@ import {
   TablePagination,
   TableSortLabel,
   Box,
-  Toolbar
+  Toolbar,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  Typography
 } from '@mui/material';
 import data from '../data/data.json';
 
@@ -83,6 +89,8 @@ function MatieresContent() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCourse, setSelectedCourse] = useState(null);
+  const [open, setOpen] = useState(false);
 
   const uniqueCourses = useMemo(() => {
     return [...new Set(data.map(note => note.course))].map(course => ({ course }));
@@ -113,6 +121,16 @@ function MatieresContent() {
     setPage(0);
   };
 
+  const handleClick = (course) => {
+    setSelectedCourse(course);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setSelectedCourse(null);
+  };
+
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - sortedData.length) : 0;
 
   return (
@@ -141,7 +159,7 @@ function MatieresContent() {
                 {sortedData
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => (
-                    <TableRow hover key={index}>
+                    <TableRow hover key={row.course} onClick={() => handleClick(row.course)} style={{ cursor: 'pointer' }}>
                       <TableCell>{row.course}</TableCell>
                     </TableRow>
                   ))}
@@ -164,6 +182,45 @@ function MatieresContent() {
           />
         </Paper>
       </Box>
+
+      <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
+        <DialogTitle>Détails de la matière</DialogTitle>
+        <DialogContent>
+          {selectedCourse && (
+            <>
+              <Typography variant="h6">{selectedCourse}</Typography>
+              <Typography variant="h6" sx={{ mt: 2 }}>Étudiants inscrits:</Typography>
+              <TableContainer component={Paper} sx={{ mt: 1 }}>
+                <Table size="small">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Nom</TableCell>
+                      <TableCell>ID Étudiant</TableCell>
+                      <TableCell>Date</TableCell>
+                      <TableCell align="right">Note</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {data
+                      .filter(note => note.course === selectedCourse)
+                      .map(note => (
+                        <TableRow key={note.unique_id}>
+                          <TableCell>{note.student.firstname} {note.student.lastname}</TableCell>
+                          <TableCell>{note.student.id}</TableCell>
+                          <TableCell>{note.date}</TableCell>
+                          <TableCell align="right">{note.grade}</TableCell>
+                        </TableRow>
+                      ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Fermer</Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }
