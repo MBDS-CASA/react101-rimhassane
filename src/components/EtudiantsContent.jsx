@@ -11,7 +11,13 @@ import {
   TablePagination,
   TableSortLabel,
   Box,
-  Toolbar
+  Toolbar,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  Typography
 } from '@mui/material';
 import data from '../data/data.json';
 
@@ -85,6 +91,8 @@ function EtudiantsContent() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedStudent, setSelectedStudent] = useState(null);
+  const [open, setOpen] = useState(false);
 
   const uniqueStudents = useMemo(() => {
     const students = data.reduce((acc, note) => {
@@ -124,6 +132,16 @@ function EtudiantsContent() {
     setPage(0);
   };
 
+  const handleClick = (student) => {
+    setSelectedStudent(student);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setSelectedStudent(null);
+  };
+
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - sortedData.length) : 0;
 
   return (
@@ -152,7 +170,7 @@ function EtudiantsContent() {
                 {sortedData
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => (
-                    <TableRow hover key={row.id}>
+                    <TableRow hover key={row.id} onClick={() => handleClick(row)} style={{ cursor: 'pointer' }}>
                       <TableCell>{row.firstname}</TableCell>
                       <TableCell>{row.lastname}</TableCell>
                       <TableCell align="right">{row.id}</TableCell>
@@ -177,6 +195,46 @@ function EtudiantsContent() {
           />
         </Paper>
       </Box>
+
+      <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
+        <DialogTitle>Détails de l'étudiant</DialogTitle>
+        <DialogContent>
+          {selectedStudent && (
+            <>
+              <Typography variant="h6">
+                {selectedStudent.firstname} {selectedStudent.lastname}
+              </Typography>
+              <Typography variant="body1">ID: {selectedStudent.id}</Typography>
+              <Typography variant="h6" sx={{ mt: 2 }}>Notes:</Typography>
+              <TableContainer component={Paper} sx={{ mt: 1 }}>
+                <Table size="small">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Matière</TableCell>
+                      <TableCell>Date</TableCell>
+                      <TableCell align="right">Note</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {data
+                      .filter(note => note.student.id === selectedStudent.id)
+                      .map(note => (
+                        <TableRow key={note.unique_id}>
+                          <TableCell>{note.course}</TableCell>
+                          <TableCell>{note.date}</TableCell>
+                          <TableCell align="right">{note.grade}</TableCell>
+                        </TableRow>
+                      ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Fermer</Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }
