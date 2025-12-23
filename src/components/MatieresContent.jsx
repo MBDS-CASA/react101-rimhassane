@@ -1,5 +1,6 @@
 import React from 'react';
-import data from '../../data.json';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+import data from '../data/data.json';
 
 function MatieresContent() {
   // Extract unique courses
@@ -8,20 +9,22 @@ function MatieresContent() {
   return (
     <div className="container mt-4">
       <h3>Matières</h3>
-      <div className="row">
-        {uniqueCourses.map((course, index) => (
-          <div key={index} className="col-md-6 col-lg-4 mb-4">
-            <div className="card h-100 shadow-sm">
-              <div className="card-body">
-                <h5 className="card-title">{course}</h5>
-                <p className="card-text">
-                  <strong>Matière:</strong> {course}
-                </p>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+      <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 650 }} aria-label="courses table">
+          <TableHead>
+            <TableRow>
+              <TableCell>Course</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {uniqueCourses.map((course, index) => (
+              <TableRow key={index}>
+                <TableCell>{course}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   );
 }
