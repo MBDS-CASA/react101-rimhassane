@@ -1,121 +1,30 @@
-import { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 import Header from './components/Header.jsx';
 import Footer from './components/Footer.jsx';
-import NoteCard from './components/NoteCard.jsx';
+import HomeContent from './components/HomeContent.jsx';
 import NotesContent from './components/NotesContent.jsx';
 import EtudiantsContent from './components/EtudiantsContent.jsx';
 import MatieresContent from './components/MatieresContent.jsx';
 import AproposContent from './components/AproposContent.jsx';
-import { getRandomNote } from './utils.js';
-import data from '../data.json';
-
-const menuItems = ['Notes', 'Etudiants', 'Matières', 'A propos'];
-
-function Content({ selectedMenuItem }) {
-  const [selectedNote, setSelectedNote] = useState(null);
-  const [dateTime, setDateTime] = useState(new Date());
-
-  useEffect(() => {
-    const interval = setInterval(() => setDateTime(new Date()), 1000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const handleRandomNote = () => {
-    const randomNote = getRandomNote(data);
-    setSelectedNote(randomNote);
-  };
-
-  const jours = ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"];
-  const mois = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
-                "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
-
-  const jourSemaine = jours[dateTime.getDay()];
-  const jour = dateTime.getDate();
-  const moisNom = mois[dateTime.getMonth()];
-  const annee = dateTime.getFullYear();
-  const heures = String(dateTime.getHours()).padStart(2, '0');
-  const minutes = String(dateTime.getMinutes()).padStart(2, '0');
-  const secondes = String(dateTime.getSeconds()).padStart(2, '0');
-
-  const renderContent = () => {
-    switch (selectedMenuItem) {
-      case 'Notes':
-        return <NotesContent />;
-      case 'Etudiants':
-        return <EtudiantsContent />;
-      case 'Matières':
-        return <MatieresContent />;
-      case 'A propos':
-        return <AproposContent />;
-      default:
-        return (
-          <div className="container-fluid py-4">
-            <div className="row">
-              <div className="col-12 text-center mb-4">
-                <h2 className="text-primary">
-                  <i className="fas fa-clock me-2"></i>
-                  Bonjour, on est le {jourSemaine}, {jour} {moisNom} {annee}
-                </h2>
-                <p className="h4 text-muted">{heures}:{minutes}:{secondes}</p>
-              </div>
-            </div>
-
-            <div className="row justify-content-center mb-4">
-              <div className="col-md-8 col-lg-6">
-                <div className="card shadow">
-                  <div className="card-body text-center">
-                    <h5 className="card-title">
-                      <i className="fas fa-random me-2"></i>
-                      Sélection d'une note aléatoire
-                    </h5>
-                    <p className="card-text text-muted">
-                      Cliquez sur le bouton ci-dessous pour afficher les détails d'une note sélectionnée aléatoirement parmi {data.length} notes disponibles.
-                    </p>
-                    <button
-                      className="btn btn-primary btn-lg"
-                      onClick={handleRandomNote}
-                    >
-                      <i className="fas fa-dice me-2"></i>
-                      Sélectionner une note aléatoire
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {selectedNote && (
-              <div className="row justify-content-center">
-                <div className="col-md-10 col-lg-8">
-                  <NoteCard note={selectedNote} />
-                </div>
-              </div>
-            )}
-          </div>
-        );
-    }
-  };
-
-  return (
-    <main>
-      {renderContent()}
-    </main>
-  );
-}
 
 function App() {
-  const [selectedMenuItem, setSelectedMenuItem] = useState(null);
-
-  const handleMenuClick = (item) => {
-    setSelectedMenuItem(item);
-  };
-
   return (
-    <div id="root" className="min-vh-100 d-flex flex-column">
-      <Header menuItems={menuItems} selectedItem={selectedMenuItem} onMenuClick={handleMenuClick} />
-      <Content selectedMenuItem={selectedMenuItem} />
-      <Footer />
-    </div>
+    <Router>
+      <div id="root" className="min-vh-100 d-flex flex-column">
+        <Header />
+        <main className="flex-grow-1">
+          <Routes>
+            <Route path="/" element={<HomeContent />} />
+            <Route path="/notes" element={<NotesContent />} />
+            <Route path="/etudiants" element={<EtudiantsContent />} />
+            <Route path="/matieres" element={<MatieresContent />} />
+            <Route path="/apropos" element={<AproposContent />} />
+          </Routes>
+        </main>
+        <Footer />
+      </div>
+    </Router>
   );
 }
 

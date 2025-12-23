@@ -1,31 +1,23 @@
 import emsiLogo from '../assets/logoEmsi.PNG';
 import Menu from './Menu.jsx';
 
-function Header({ menuItems, selectedItem, onMenuClick }) {
+function Header() {
   return (
-    <header className="bg-primary text-white py-4 shadow">
-      <div className="container">
-        <div className="row align-items-center">
-          <div className="col-md-3 text-center mb-3 mb-md-0">
-            <Menu menuItems={menuItems} selectedItem={selectedItem} onItemClick={onMenuClick} />
-          </div>
-          <div className="col-md-3 text-center mb-3 mb-md-0">
-            <img
-              src={emsiLogo}
-              className="img-fluid rounded"
-              alt="EMSI Logo"
-              style={{ maxWidth: '150px', height: 'auto' }}
-            />
-          </div>
-          <div className="col-md-6 text-center text-md-start">
-            <h1 className="display-5 fw-bold mb-2">
-              <i className="fas fa-graduation-cap me-3"></i>
-              TD03 - Gestion des Notes
-            </h1>
-            <h2 className="h4 text-light mb-0">
-              Affichage des détails d'une note étudiante
-            </h2>
-          </div>
+    <header style={{ backgroundColor: '#007bff', color: 'white', padding: '20px' }}>
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <div style={{ marginRight: '20px' }}>
+          <Menu />
+        </div>
+        <div style={{ marginRight: '20px' }}>
+          <img
+            src={emsiLogo}
+            alt="EMSI Logo"
+            style={{ maxWidth: '100px', height: 'auto' }}
+          />
+        </div>
+        <div>
+          <h1>TD03 - Gestion des Notes</h1>
+          <h2>Affichage des détails d'une note étudiante</h2>
         </div>
       </div>
     </header>

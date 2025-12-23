@@ -2,7 +2,7 @@ import React from 'react';
 
 function AproposContent() {
   return (
-    <div className="container mt-4">
+    <div className="container mt-4 fade-in">
       <h3>À propos</h3>
       <div className="card shadow">
         <div className="card-body">
