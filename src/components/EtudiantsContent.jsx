@@ -1,5 +1,6 @@
 import React from 'react';
-import data from '../../data.json';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+import data from '../data/data.json';
 
 function EtudiantsContent() {
   // Extract unique students
@@ -14,20 +15,26 @@ function EtudiantsContent() {
   return (
     <div className="container mt-4">
       <h3>Étudiants</h3>
-      <div className="row">
-        {uniqueStudents.map((student) => (
-          <div key={student.id} className="col-md-6 col-lg-4 mb-4">
-            <div className="card h-100 shadow-sm">
-              <div className="card-body">
-                <h5 className="card-title">{student.firstname} {student.lastname}</h5>
-                <p className="card-text">
-                  <strong>ID Étudiant:</strong> {student.id}
-                </p>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+      <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 650 }} aria-label="students table">
+          <TableHead>
+            <TableRow>
+              <TableCell>Firstname</TableCell>
+              <TableCell>Lastname</TableCell>
+              <TableCell>ID</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {uniqueStudents.map((student) => (
+              <TableRow key={student.id}>
+                <TableCell>{student.firstname}</TableCell>
+                <TableCell>{student.lastname}</TableCell>
+                <TableCell>{student.id}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   );
 }
